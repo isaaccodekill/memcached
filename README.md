@@ -40,10 +40,10 @@ After building the project, start the server with:
 The server listens on a configurable default port, as set in the application's configuration.
 
 ### Supported Commands
-- `set <key> <flags> <exptime> <bytes> [noreply]\r\n<data block>\r\n`
-- `get <key>*\r\n`
-- `delete <key> [noreply]\r\n`
-- `flush_all [noreply]\r\n`
+- `set <key> <flags> <exptime> <bytes> [noreply]\r\n<data block>\r\n` [coming soon]
+- `get <key>*\r\n` [coming soon]
+- `delete <key> [noreply]\r\n` [coming soon]
+- `flush_all [noreply]\r\n` [coming soon]
 - `help\r\n`
 
 ## Contributing
