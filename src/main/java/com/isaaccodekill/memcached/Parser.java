@@ -9,13 +9,6 @@ import java.util.Arrays;
 public class Parser {
 
 
-    // commands we are handling:
-    // set key flag exptime size
-    // get key*
-    // delete key
-    // flush_all
-    // quit
-    // help
     public static Command parseBuffer(Buffer buffer){
         String bufferString = buffer.toString();
         String[] bufferParts = bufferString.split(" ");

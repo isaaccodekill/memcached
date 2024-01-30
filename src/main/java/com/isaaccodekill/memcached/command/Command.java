@@ -1,6 +1,8 @@
 package com.isaaccodekill.memcached.command;
 
 
+import com.isaaccodekill.memcached.localcache.Cache;
+
 // utilize the builder pattern to create a command object
 public class Command {
 
@@ -34,11 +36,12 @@ public class Command {
     }
     private String handleSetCommand(String key, String flag, Number exptime, String size){
         // handle set command
-        return "set command";
+        Cache cache =  Cache.getInstance();
+        cache.set(key, Byte.parseByte(size));
     }
 
     private String handleGetCommand(String key){
-        // handle get command
+
         return "get command";
     }
 
