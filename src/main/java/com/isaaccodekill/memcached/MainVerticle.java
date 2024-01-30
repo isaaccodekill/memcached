@@ -8,13 +8,11 @@ import io.vertx.core.net.NetServer;
 
 public class MainVerticle extends AbstractVerticle {
 
-    private NetServer server;
-
-  @Override
+    @Override
   public void start() throws Exception {
       int port = config().getInteger("port");
       System.out.println("Port is " + port);
-    server = vertx.createNetServer();
+      NetServer server = vertx.createNetServer();
 
       server.connectHandler(socket -> {
           System.out.println("A client has connected!");
@@ -23,8 +21,11 @@ public class MainVerticle extends AbstractVerticle {
               Cache cache = Cache.getInstance();
               Command command =  Parser.parseBuffer(buffer);
               String response = command.execute();
-              Buffer responseBuffer = Buffer.buffer(response);
-              socket.write(responseBuffer);
+
+              if(command.noreply == true){
+                  Buffer responseBuffer = Buffer.buffer(response);
+                  socket.write(responseBuffer);
+              }
           });
       });
 

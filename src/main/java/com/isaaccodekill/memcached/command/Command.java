@@ -11,6 +11,7 @@ public class Command {
     public String flag;
     public Number exptime;
     public String size;
+    public Boolean noreply;
 
 
 
@@ -19,7 +20,7 @@ public class Command {
     public String execute(){
         switch(command){
             case "set":
-                return handleSetCommand("", flag, exptime, size);
+                return handleSetCommand("", "", flag, exptime, size);
             case "get":
                 return handleGetCommand("");
             case "delete":
@@ -34,10 +35,10 @@ public class Command {
                 return handleUnknownCommand();
         }
     }
-    private String handleSetCommand(String key, String flag, Number exptime, String size){
+    private String handleSetCommand(String key, String value,  String flag, Number exptime, String size){
         // handle set command
         Cache cache =  Cache.getInstance();
-        cache.set(key, Byte.parseByte(size));
+        return cache.set(key, value, flag, exptime, size);
     }
 
     private String handleGetCommand(String key){

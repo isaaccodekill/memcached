@@ -32,6 +32,11 @@ public class CommandBuilder {
         return this.command;
     }
 
+    public CommandBuilder setNoreply(Boolean noreply){
+        this.command.noreply = noreply;
+        return this;
+    }
+
     public Command build(){
         return this.command;
     }

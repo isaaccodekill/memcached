@@ -20,17 +20,25 @@ public class Cache {
     private ConcurrentHashMap<String, HashMap<String, String>> cache = new ConcurrentHashMap<String, HashMap<String, String>>();
 
 
-    public void set(String key, String value, String flag, Number exptime, String size){
 
-        HashMap<String, String> valueMap = new HashMap<String, String>();
-        valueMap.put("value", value);
-        valueMap.put("flag", flag);
-        valueMap.put("exptime", exptime.toString());
-        valueMap.put("size", size);
-        cache.put(key, valueMap);
-        Response response = new Response()
-                ;
-        ;
+    public String set(String key, String value, String flag, Number exptime, String size)  {
+        try {
+
+            if (key == null || value == null) {
+                throw new IllegalArgumentException("Key or value cannot be null");
+            }
+
+            HashMap<String, String> valueMap = new HashMap<String, String>();
+            valueMap.put("value", value);
+            valueMap.put("flag", flag);
+            valueMap.put("exptime", exptime.toString());
+            valueMap.put("size", size);
+            cache.put(key, valueMap);
+
+            return CacheResponse.getSetResponse(key, value, flag, exptime, size);
+        } catch(Exception e){
+            throw new RuntimeException(e);
+        }
     }
     public void get(String key){
         cache.get(key);

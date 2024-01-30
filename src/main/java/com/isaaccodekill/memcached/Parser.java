@@ -41,6 +41,7 @@ public class Parser {
         String flag = commandArguments[1];
         Number exptime = Integer.parseInt(commandArguments[2]);
         String size = commandArguments[3];
+        Boolean noreply = commandArguments.length == 5 && commandArguments[4].equals("noreply") ;
 
         CommandBuilder builder = new CommandBuilder();
         builder.setCommand(commandEntry);
@@ -48,6 +49,7 @@ public class Parser {
         builder.setFlag(flag);
         builder.setExptime(exptime);
         builder.setSize(size);
+        builder.setNoreply(noreply);
         return builder.build();
     }
 
