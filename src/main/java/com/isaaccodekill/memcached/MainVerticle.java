@@ -22,14 +22,10 @@ public class MainVerticle extends AbstractVerticle {
               // problem, some commands require more than one line
               // we need to buffer the input until we have a complete command
 
-
-
-
-              Cache cache = Cache.getInstance();
               Command command =  Parser.parseBuffer(buffer);
               String response = command.execute();
 
-              if(command.noreply == true){
+              if(command.noreply){
                   Buffer responseBuffer = Buffer.buffer(response);
                   socket.write(responseBuffer);
               }

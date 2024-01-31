@@ -11,6 +11,7 @@ public class Parser {
 
 
     // not thread safe
+    // TODO make this parser thread safe
     private static CommandBuilder savedCommandBuilder = null;
     private static void saveCommandBuilder (CommandBuilder uncompletedCommandBuilder){
         // save the command, and wait for the next line
