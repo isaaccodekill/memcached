@@ -1,10 +1,13 @@
 package com.isaaccodekill.memcached.localcache;
 
 import java.util.HashMap;
+import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache {
     // in here we will implement the core logic of our cache
+
+    // bruh sigh
 
     private Cache(){}
     private static Cache instance;
@@ -34,10 +37,13 @@ public class Cache {
                 throw new IllegalArgumentException("Key or value cannot be null");
             }
 
+            long exptimeUnix = System.currentTimeMillis() / 1000L + exptime.longValue();
+
             HashMap<String, String> valueMap = new HashMap<>();
             valueMap.put("value", value);
             valueMap.put("flag", flag.toString());
             valueMap.put("exptime", exptime.toString());
+            valueMap.put("exptimeunix", Long.toString(exptimeUnix));
             valueMap.put("size", size.toString());
             cache.put(key, valueMap);
 
@@ -56,6 +62,11 @@ public class Cache {
             if(valueMap == null){
                 return CacheResponse.endResponse();
             }
+
+            if(checkIfKeyExpired(key)){
+                return CacheResponse.endResponse();
+            }
+
 
             String value = valueMap.get("value");
             String flag = valueMap.get("flag");
@@ -82,5 +93,29 @@ public class Cache {
         cache.clear();
         return  CacheResponse.getOkResponse();
     }
+
+
+    private Boolean checkIfKeyExpired(String key){
+        HashMap<String, String> valueMap = cache.get(key);
+
+        // if the exptime is 0 then it never expires
+        if(valueMap.get("exptime").equals("0")){
+            return false;
+        }
+
+        // compare current time with exptime
+        if(   System.currentTimeMillis() / 1000L > Long.parseLong(valueMap.get("exptimeunix")) ){
+            cache.remove(key);
+            return true;
+        }
+
+        return false;
+    }
+
+
+
+
+
+
 
 }

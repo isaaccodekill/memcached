@@ -23,11 +23,13 @@ public class MainVerticle extends AbstractVerticle {
               // we need to buffer the input until we have a complete command
 
               Command command =  Parser.parseBuffer(buffer);
-              String response = command.execute();
 
-              if(command.noreply){
-                  Buffer responseBuffer = Buffer.buffer(response);
-                  socket.write(responseBuffer);
+              if(command != null){
+                  String response = command.execute();
+                  if(command.noreply){
+                      Buffer responseBuffer = Buffer.buffer(response);
+                      socket.write(responseBuffer);
+                  }
               }
           });
       });

@@ -36,6 +36,7 @@ public class Parser {
 
             CommandType commandType = CommandType.valueOf(commandEntry.toUpperCase());
 
+            System.out.println("commandType: " + commandType + " " + commandEntry);
 
             switch (commandType) {
                 case  SET:
@@ -55,6 +56,7 @@ public class Parser {
                     return handleUnknownCommand(commandEntry, commandArguments);
             }
         }catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
             throw new IllegalArgumentException(ParserErrors.BadCommand);
         }
     }
@@ -66,15 +68,16 @@ public class Parser {
         }
 
         // things to check
+        // key should not be more than 250 characters
         // if value to be stored is larger than the size specified throw client error
         // if the flag is not an integer throw client error
         // if the exptime is not an integer throw client error
         // if the size is not an integer throw client error
 
         String key = commandArguments[0];
-        Number flag = Integer.parseInt(commandArguments[1]);
-        Number exptime = Integer.parseInt(commandArguments[2]);
-        Number size = Integer.parseInt(commandArguments[3]);
+        Number flag = Integer.parseInt(commandArguments[1].trim());
+        Number exptime = Integer.parseInt(commandArguments[2].trim());
+        Number size = Integer.parseInt(commandArguments[3].trim());
         Boolean noreply = commandArguments.length == 5 && commandArguments[4].equals("noreply") ;
 
         CommandBuilder builder = new CommandBuilder();
