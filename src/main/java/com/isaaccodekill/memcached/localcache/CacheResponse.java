@@ -10,8 +10,24 @@ public class CacheResponse {
         return "STORED\r\n";
     }
 
-    public static String getDeleteResponse(String key, String value, String flag, Number exptime, String size){
+    public static String getDeleteResponse(){
         return "DELETED\r\n";
+    }
+
+    public static String getOkResponse(){
+        return "OK\r\n";
+    }
+
+    public static String endResponse(){
+        return "END\r\n";
+    }
+
+    public static String getQuitResponse(){
+        return "BYE\r\n";
+    }
+
+    public static String notFoundResponse(){
+        return "NOT_FOUND\r\n";
     }
 
 

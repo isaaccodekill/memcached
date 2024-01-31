@@ -17,7 +17,7 @@ public class CommandBuilder {
         return this;
     }
 
-    public CommandBuilder setFlag(String flag){
+    public CommandBuilder setFlag(Number flag){
         this.command.flag = flag;
         return this;
     }
@@ -27,13 +27,21 @@ public class CommandBuilder {
         return this;
     }
 
-    public Command setSize(String size){
+    public Command setSize(Number size){
         this.command.size = size;
         return this.command;
     }
 
     public CommandBuilder setNoreply(Boolean noreply){
         this.command.noreply = noreply;
+        return this;
+    }
+
+    public CommandBuilder setValue(String value){
+        if(value.length() > this.command.size.intValue()){
+            throw new IllegalArgumentException("Value cannot be greater than size");
+        }
+        this.command.value = value;
         return this;
     }
 

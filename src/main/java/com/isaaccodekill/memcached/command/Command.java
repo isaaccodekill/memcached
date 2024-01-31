@@ -8,10 +8,12 @@ public class Command {
 
     public String command;
     public String[] keys;
-    public String flag;
+    public Number flag;
     public Number exptime;
-    public String size;
+    public Number size;
     public Boolean noreply;
+
+    public String value;
 
 
 
@@ -35,20 +37,20 @@ public class Command {
                 return handleUnknownCommand();
         }
     }
-    private String handleSetCommand(String key, String value,  String flag, Number exptime, String size){
+    private String handleSetCommand(String key, String value,  Number flag, Number exptime, Number size){
         // handle set command
         Cache cache =  Cache.getInstance();
         return cache.set(key, value, flag, exptime, size);
     }
 
     private String handleGetCommand(String key){
-
-        return "get command";
+        Cache cache =  Cache.getInstance();
+        return cache.get(key);
     }
 
     private String handleDeleteCommand(String key){
-        // handle delete command
-        return "delete command";
+        Cache cache =  Cache.getInstance();
+        return cache.delete(key);
     }
 
     private String handleFlushCommand(){

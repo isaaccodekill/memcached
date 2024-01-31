@@ -1,6 +1,7 @@
 package com.isaaccodekill.memcached;
 import com.isaaccodekill.memcached.command.Command;
 import com.isaaccodekill.memcached.localcache.Cache;
+import com.isaaccodekill.memcached.parser.Parser;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.net.NetServer;
@@ -17,7 +18,13 @@ public class MainVerticle extends AbstractVerticle {
       server.connectHandler(socket -> {
           System.out.println("A client has connected!");
           socket.handler(buffer -> {
-              // initialize the cache
+
+              // problem, some commands require more than one line
+              // we need to buffer the input until we have a complete command
+
+
+
+
               Cache cache = Cache.getInstance();
               Command command =  Parser.parseBuffer(buffer);
               String response = command.execute();
