@@ -16,13 +16,24 @@ public class MainVerticle extends AbstractVerticle {
       NetServer server = vertx.createNetServer();
 
       server.connectHandler(socket -> {
-          System.out.println("A client has connected!");
+          // this is a socket handler
+          // lets try storing an unfinished command here
+
+          // --- TODO: refactor this (can't work because only final variables can be used in lambda expressions
+          Command savedCommand = null;
           socket.handler(buffer -> {
 
               // problem, some commands require more than one line
               // we need to buffer the input until we have a complete command
 
-              Command command =  Parser.parseBuffer(buffer);
+              Command command =  Parser.parseBuffer(buffer, savedCommand);
+
+              // check if command is incomplete
+
+              if(command.incomplete){
+                  savedCommand = command;
+                  return;
+              }
 
               if(command != null){
                   String response = command.execute();

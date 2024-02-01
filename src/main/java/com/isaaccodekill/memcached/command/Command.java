@@ -13,6 +13,9 @@ public class Command {
     public Number size;
     public Boolean noreply;
 
+    // false by default
+    public Boolean incomplete = false;
+
     public String value;
 
 

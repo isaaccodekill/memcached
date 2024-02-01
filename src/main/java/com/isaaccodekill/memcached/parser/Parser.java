@@ -7,31 +7,29 @@ import io.vertx.core.buffer.Buffer;
 
 import java.util.Arrays;
 
+
+// the goal of this is to handle multi line commands
+// a normal command and then a value command
 public class Parser {
 
 
     // not thread safe
     // TODO make this parser thread safe
-    private static CommandBuilder savedCommandBuilder = null;
-    private static void saveCommandBuilder (CommandBuilder uncompletedCommandBuilder){
-        // save the command, and wait for the next line
-        if(savedCommandBuilder == null){
-            savedCommandBuilder = uncompletedCommandBuilder;
-        }
-    }
-    public static Command parseBuffer(Buffer buffer){
+    
+    public static Command parseBuffer(Buffer buffer, Command savedCommand){
 
         try {
             String bufferString = buffer.toString();
             String[] bufferParts = bufferString.split(" ");
 
+            // this handles multi line commands
+            if(savedCommand != null){
+                return handleValueCommand(bufferString, savedCommand);
+            }
+
             String commandEntry = bufferParts[0].trim();
             String[] commandArguments = Arrays.copyOfRange(bufferParts, 1, bufferParts.length);
 
-
-            if(savedCommandBuilder != null){
-               return handleValueCommand(commandEntry);
-            }
 
 
             CommandType commandType = CommandType.valueOf(commandEntry.toUpperCase());
@@ -75,22 +73,9 @@ public class Parser {
         // if the size is not an integer throw client error
 
         String key = commandArguments[0];
-        Number flag = Integer.parseInt(commandArguments[1].trim());
-        Number exptime = Integer.parseInt(commandArguments[2].trim());
-        Number size = Integer.parseInt(commandArguments[3].trim());
-        Boolean noreply = commandArguments.length == 5 && commandArguments[4].equals("noreply") ;
+        CommandBuilder builder = getMultiLineCommandBuilder(commandEntry, commandArguments, key);
 
-        CommandBuilder builder = new CommandBuilder();
-        builder.setCommand(commandEntry);
-        builder.setKeys(new String[]{key});
-        builder.setFlag(flag);
-        builder.setExptime(exptime);
-        builder.setSize(size);
-        builder.setNoreply(noreply);
-
-        saveCommandBuilder(builder);
-
-        return null;
+        return saveCommand(builder);
     }
 
     private static Command handleRetrievalCommand(String commandEntry, String[] commandArguments){
@@ -132,13 +117,40 @@ public class Parser {
         return builder.build();
     }
 
-    private static Command handleValueCommand(String commandEntry){
+    private static Command handleValueCommand(String valueEntry, Command savedCommand){
         try {
-            savedCommandBuilder.setValue(commandEntry);
-            return savedCommandBuilder.build();
+
+            if(valueEntry.length() > savedCommand.size.intValue()){
+                throw new IllegalArgumentException(ParserErrors.BadDataChunk);
+            }
+
+            CommandBuilder builder = new CommandBuilder(savedCommand);
+            builder.setValue(valueEntry);
+            return builder.build();
+
         }catch (Exception e) {
             throw new IllegalArgumentException(ParserErrors.BadDataChunk);
         }
+    }
+
+    private static CommandBuilder getMultiLineCommandBuilder(String commandEntry, String[] commandArguments, String key) {
+        Number flag = Integer.parseInt(commandArguments[1].trim());
+        Number exptime = Integer.parseInt(commandArguments[2].trim());
+        Number size = Integer.parseInt(commandArguments[3].trim());
+        Boolean noreply = commandArguments.length == 5 && commandArguments[4].equals("noreply") ;
+
+        CommandBuilder builder = new CommandBuilder();
+        builder.setCommand(commandEntry);
+        builder.setKeys(new String[]{key});
+        builder.setFlag(flag);
+        builder.setExptime(exptime);
+        builder.setSize(size);
+        builder.setNoreply(noreply);
+        return builder;
+    }
+    private static Command saveCommand (CommandBuilder commandBuilder){
+        commandBuilder.setIncomplete(true);
+        return commandBuilder.build();
     }
 
     

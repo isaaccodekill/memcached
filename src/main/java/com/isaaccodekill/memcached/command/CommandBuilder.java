@@ -7,6 +7,10 @@ public class CommandBuilder {
         this.command = new Command();
     }
 
+    public CommandBuilder(Command command){
+        this.command = command;
+    }
+
     public  CommandBuilder setCommand(String command){
         this.command.command = command;
         return this;
@@ -42,6 +46,11 @@ public class CommandBuilder {
             throw new IllegalArgumentException("Value cannot be greater than size");
         }
         this.command.value = value;
+        return this;
+    }
+
+    public CommandBuilder setIncomplete(Boolean incomplete){
+        this.command.incomplete = incomplete;
         return this;
     }
 
